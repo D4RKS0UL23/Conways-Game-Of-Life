@@ -35,7 +35,8 @@ public:
 private:
 	static sf::RenderWindow*		m_window;			// A reference to a window object
 	static sf::Event				m_event;			// The event handling variable of SFML
-	static TestRender				m_test;
+//	static TestRender				m_test;
+	static Map						m_map;				// The grid
 
 	/**
 		Updates the elements on screen

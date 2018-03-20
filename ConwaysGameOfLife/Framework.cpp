@@ -4,7 +4,8 @@
 // Initilaize static variables
 sf::RenderWindow*	Framework::m_window = nullptr;
 sf::Event			Framework::m_event = sf::Event();
-TestRender			Framework::m_test = TestRender();
+//TestRender			Framework::m_test = TestRender();
+Map					Framework::m_map = Map(50, 50, 10);
 
 bool Framework::init(unsigned width, unsigned height, const char* title, sf::Uint8 flags)
 {
@@ -75,18 +76,44 @@ bool Framework::run()
 // Updates screen elements
 bool Framework::update()
 {
-	if (!m_test.update()) return false;
+//	if (!m_test.update()) return false;
+	m_map.update();
 	return true;
 }
 
 // Handles window events
 bool Framework::handleEvents()
 {
+	static float mouseDelta = 0;
 	while (m_window->pollEvent(m_event))
 	{
 		// On Close Event
 		if (m_event.type == sf::Event::Closed) m_window->close();
+
+		if (m_event.type == sf::Event::KeyPressed)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+				m_map.changeSimulationState();
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+				m_map.increaseSpeed();
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+				m_map.decreaseSpeed();
+		}
 	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+	{
+		m_map.mousePos(sf::Mouse::getPosition(*m_window).x, sf::Mouse::getPosition(*m_window).y, true);
+	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+	{
+		m_map.mousePos(sf::Mouse::getPosition(*m_window).x, sf::Mouse::getPosition(*m_window).y, false);
+	}
+
+	
 
 	return true;
 }
@@ -96,7 +123,8 @@ bool Framework::render()
 {
 	m_window->clear();
 
-	if (!m_test.render(*m_window)) return false;
+//	if (!m_test.render(*m_window)) return false;
+	if (!m_map.render(*m_window)) return false;
 
 	m_window->display();
 
